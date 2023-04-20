@@ -30,15 +30,13 @@ DATA = {
 #   }
 # }
 
-def recipe(requests, recipe):
-    # так тоже работает, но не реагирует на servings
-    # servings = int(requests.GET.get("servings", 1))
-    # context = {'recipe': DATA[recipe]}
-    # return render(requests, 'calculator/index.html', context)
-
-    servings = int(requests.GET.get("servings", 1))
-    for ingredient, amount in DATA[recipe].items():
-        amount = amount * servings
-        DATA.update(ingredient=amount)
-        context = {'recipe': DATA[recipe]}
-        return render(requests, 'calculator/index.html', context)
+def recipe(requests, recipe=''):
+    persons = int(requests.GET.get("servings", 1))
+    dish_dict = DATA.get(recipe, {})
+    context = {
+        'recipe':{
+            ingredient: amount * persons
+            for ingredient, amount in dish_dict.items()
+        }
+    }
+    return render(requests, 'calculator/index.html', context)
