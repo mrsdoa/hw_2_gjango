@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
 DATA = {
     'omlet': {
@@ -28,3 +29,16 @@ DATA = {
 #     'ингредиент2': количество2,
 #   }
 # }
+
+def recipe(requests, recipe):
+    # так тоже работает, но не реагирует на servings
+    # servings = int(requests.GET.get("servings", 1))
+    # context = {'recipe': DATA[recipe]}
+    # return render(requests, 'calculator/index.html', context)
+
+    servings = int(requests.GET.get("servings", 1))
+    for ingredient, amount in DATA[recipe].items():
+        amount = amount * servings
+        DATA.update(ingredient=amount)
+        context = {'recipe': DATA[recipe]}
+        return render(requests, 'calculator/index.html', context)
